@@ -1,0 +1,9 @@
+networks:
+  open6gc:
+    name: open6gc
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.6.0.0/24
+    driver_opts:
+      com.docker.network.bridge.name: br-open6gc

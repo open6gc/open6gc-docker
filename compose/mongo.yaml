@@ -1,0 +1,17 @@
+
+services:
+  config_db:
+    container_name: open6gc-mongodb
+    image: mongo
+    command: mongod --port 27017
+    expose:
+      - "27017"
+    volumes:
+      - open6gc_configdb_data:/data/db
+    networks:
+      open6gc:
+        aliases:
+          - db
+
+volumes:
+  open6gc_configdb_data:

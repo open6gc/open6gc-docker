@@ -1,0 +1,18 @@
+services:
+  rabbitmq:
+    container_name: 'open6gc-rabbitmq'
+    image: rabbitmq:3-management-alpine
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - open6gc_rabbitmq_data:/var/lib/rabbitmq/
+        - open6gc_rabbitmq_log:/var/log/rabbitmq
+    networks:
+      open6gc:
+        aliases:
+          - mq
+
+volumes:
+  open6gc_rabbitmq_data:
+  open6gc_rabbitmq_log:

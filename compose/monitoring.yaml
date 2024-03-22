@@ -1,0 +1,78 @@
+services:
+  grafana:
+    image: grafana/grafana-oss
+    container_name: open6gc-grafana
+    restart: unless-stopped
+    ports:
+     - '3000:3000'
+    volumes:
+     - 'open6gc_grafana_data:/var/lib/grafana'
+    networks:
+      open6gc:
+        aliases:
+          - grafana
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: open6gc-node-exporter
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.rootfs=/rootfs'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    expose:
+      - 9100
+    networks:
+      open6gc:
+        aliases:
+          - node-exporter
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: open6gc-prometheus
+    restart: unless-stopped
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - open6gc_prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    expose:
+      - 9090
+    networks:
+      open6gc:
+        aliases:
+          - prometheus
+    depends_on:
+      - cadvisor
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: open6gc-cadvisor
+    ports:
+    - 8080:8080
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      open6gc:
+        aliases:
+          - cadvisor
+    depends_on:
+      - config_db
+      - rabbitmq
+      - grafana
+
+volumes:
+  open6gc_grafana_data:
+  open6gc_prometheus_data:

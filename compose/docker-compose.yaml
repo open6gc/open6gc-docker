@@ -1,0 +1,6 @@
+
+include: 
+  - network.yaml
+  - mongo.yaml
+  - rabbitmq.yaml
+  - monitoring.yaml
