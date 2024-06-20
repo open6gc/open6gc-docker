@@ -1,0 +1,11 @@
+
+services:
+  nwdaf:
+    container_name: open6gc-nwdaf
+    image: open6gc-nwdaf
+    ports:
+    - 8086:8080
+    networks:
+      open6gc:
+        aliases:
+          - nwdaf

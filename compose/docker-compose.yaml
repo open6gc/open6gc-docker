@@ -4,3 +4,5 @@ include:
   - mongo.yaml
   - rabbitmq.yaml
   - monitoring.yaml
+  - logging.yaml
+  - nwdaf.yaml
